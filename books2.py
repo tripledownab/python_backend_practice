@@ -1,6 +1,7 @@
 from typing import Optional
-from fastapi import FastAPI, Path, Query
+from fastapi import FastAPI, Path, Query, HTTPException
 from pydantic import BaseModel, Field
+from starlette import status
 
 app = FastAPI()
 
@@ -56,38 +57,41 @@ ALLBOOKS = [
 async def read_root():
     return {"Hello": "World"}
 
-@app.get("/books")
+@app.get("/books", status_code=status.HTTP_200_OK)
 async def read_books():
     return ALLBOOKS
   
-@app.get("/book/{book_id}")
-async def read_book(book_id: int = Path(ge=0)): # Path Data Validation
+@app.get("/book/{book_id}", status_code=status.HTTP_200_OK)
+async def read_book(book_id: int = Path(ge=0)):
     for book in ALLBOOKS:
         if book.id == book_id:
             return book
-    return None
+    raise HTTPException(status_code=404, detail="Book not found") # Error Handling
   
-@app.get("/books_by_rating")
-async def read_books_by_rating(rating: int = Query(ge=1, le=5)): # Query Data Validation
+@app.get("/books_by_rating", status_code=status.HTTP_200_OK)
+async def read_books_by_rating(rating: int = Query(ge=1, le=5)): 
     return [book for book in ALLBOOKS if book.rating == rating]
   
-@app.post("/create_book")
+@app.post("/create_book", status_code=status.HTTP_201_CREATED)
 async def create_book(book_request: BookRequest):
     new_book = Book(**book_request.model_dump())
     new_book.id = generate_book_id()
     ALLBOOKS.append(new_book)
     return ALLBOOKS
   
-@app.put("/update_book")
+@app.put("/update_book", status_code=status.HTTP_204_NO_CONTENT)
 async def update_book(book_request: BookRequest):
-    for book in ALLBOOKS:
-        if book.id == book_request.id:
-            book.title = book_request.title
-            book.author = book_request.author
-            book.description = book_request.description
-            book.rating = book_request.rating
-            book.suggested = book_request.suggested
-    return ALLBOOKS
+  book_changed = False
+  for book in ALLBOOKS:
+      if book.id == book_request.id:
+          book.title = book_request.title
+          book.author = book_request.author
+          book.description = book_request.description
+          book.rating = book_request.rating
+          book.suggested = book_request.suggested
+          book_changed = True
+  if not book_changed:
+      raise HTTPException(status_code=404, detail="Book not found")
   
 def generate_book_id():
     new_id = max([book.id for book in ALLBOOKS]) + 1 if ALLBOOKS else 0
