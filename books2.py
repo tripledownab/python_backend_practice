@@ -1,10 +1,8 @@
-from fastapi import Body, FastAPI, HTTPException
-from pydantic import BaseModel
-
+from fastapi import FastAPI
 
 app = FastAPI()
 
-class Book(BaseModel):
+class Book:
     id: int
     title: str
     author: str
