@@ -1,20 +1,52 @@
-from flask import Flask, jsonify
+from fastapi import FastAPI
 
-app = Flask(__name__)
+app = FastAPI()
 
-# Sample data
-data = [
-    {"id": 1, "name": "Item One", "category": "Category A"},
-    {"id": 2, "name": "Item Two", "category": "Category B"}
+BOOKS = [
+    {
+        "id": 0,
+        "title": "Harry Potter and the Philosopher's Stone",
+        "author": "J.K. Rowling",
+        "liked": True,
+    },
+    {
+        "id": 1,
+        "title": "Jurassic Park",
+        "author": "Michael Crichton",
+        "liked": False,
+    },
+    {
+        "id": 2,
+        "title": "The Hobbit",
+        "author": "J.R.R. Tolkien",
+        "liked": True,
+    },
+    {
+        "id": 3,
+        "title": "To Kill a Mocking Bird",
+        "author": "Harper Lee",
+        "liked": False,
+    },
 ]
 
-@app.route("/")
-def welcome():
-    return "<h1>FA APIs</h1>"
+@app.get("/")
+async def read_root():
+    return {"Hello": "World"}
 
-@app.route('/api/data', methods=['GET'])
-def get_data():
-    return jsonify(data)
+@app.get("/books")
+async def read_books():
+    return BOOKS
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.get("/books/liked")
+async def read_liked_books():
+    return [book for book in BOOKS if book["liked"]]
+
+# query parameter
+@app.get("/books/")
+async def read_books_by_author(author: str):
+    return [book for book in BOOKS if book["author"].casefold() == author.casefold()]
+
+# path parameter
+@app.get("/books/{book_id}")
+async def read_book_by_id(book_id: int):
+    return BOOKS[book_id]
