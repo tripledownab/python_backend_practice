@@ -1,4 +1,4 @@
-Transaction ID,Transaction Date,Arrival Price (€),Execution Price (€),Units Traded,Implicit Transaction Cost (€),Explicit Transaction Cost (€),Total Transaction Cost (€)
+Transaction ID,Transaction Date,Arrival Price,Execution Price,Units Traded,Implicit Transaction Cost,Explicit Transaction Cost,Total Transaction Cost
 1,2021-01-31,103.73,102.86,1474,-1281.33,305.08,-976.25
 2,2021-02-28,102.32,101.95,1084,-400.45,192.27,-208.18
 3,2021-03-31,103.07,103.14,898,70.93,170.61,241.54

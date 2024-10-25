@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from starlette import status
-from .utils import SummaryRiskIndicator
+from .utils import summary_risk_indicator, performance_scenarios, transaction_costs
 import pandas as pd
 import os
 
@@ -10,14 +10,21 @@ router = APIRouter()
 async def check():
     return {"Hello": "World"}
 
-@router.post("/create", status_code=status.HTTP_201_CREATED)
-async def create():
-    # Load historical price data
+@router.post("/calculate", status_code=status.HTTP_201_CREATED)
+async def calculate():
     base_path = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(base_path, 'sample_data', 'historical_price_data.csv')
-    historical_prices = pd.read_csv(file_path)
+    # Load historical price data
+    historical_prices_file_path = os.path.join(base_path, 'sample_data', 'historical_price_data.csv')
+    historical_prices = pd.read_csv(historical_prices_file_path)
+    # Load transaction data
+    transaction_data_file_path = os.path.join(base_path, 'sample_data', 'transaction_data.csv')
+    transaction_data = pd.read_csv(transaction_data_file_path)
     
-    summary_risk_indicator = SummaryRiskIndicator(historical_prices)
+    summary_risk_indicator_result = summary_risk_indicator(historical_prices)
+    performance_scenarios_result = performance_scenarios(historical_prices, investment_amount=10000, investment_period=3)
+    transaction_costs_result = transaction_costs(transaction_data)
     
-    return {"Summary Risk Indicator": summary_risk_indicator}
+    return {"Summary Risk Indicator": summary_risk_indicator_result, 
+            "Performance Scenarios": performance_scenarios_result, 
+            "Transaction Costs": transaction_costs_result}
 
