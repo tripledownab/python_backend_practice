@@ -30,7 +30,6 @@ def summary_risk_indicator(historical_prices: pd.DataFrame) -> int:
     else:
         risk_class = 7
         
-    print(risk_class)
     return risk_class
 
 def performance_scenarios(historical_prices: pd.DataFrame, investment_amount: int, investment_period: int) -> dict:
@@ -50,22 +49,28 @@ def performance_scenarios(historical_prices: pd.DataFrame, investment_amount: in
     moderate_scenario = project_value(investment_amount, moderate_case, investment_period)
     favorable_scenario = project_value(investment_amount, favorable_case, investment_period)
 
-    print(f"Stress Scenario: {stress_scenario:.2f}")
-    print(f"Unfavorable Scenario: {unfavorable_scenario:.2f}")
-    print(f"Moderate Scenario: {moderate_scenario:.2f}")
-    print(f"Favorable Scenario: {favorable_scenario:.2f}")
-    
     return {"Stress Scenario": stress_scenario, "Unfavorable Scenario": unfavorable_scenario, 
             "Moderate Scenario": moderate_scenario, "Favorable Scenario": favorable_scenario}
     
 def transaction_costs(transaction_data):
-    # Calculate slippage for each transaction
     transaction_data['Slippage'] = (transaction_data['Execution Price'] - transaction_data['Arrival Price']) * transaction_data['Units Traded']
 
-    # Calculate total transaction cost percentage
     total_slippage = transaction_data['Slippage'].sum()
     total_trade_amount = (transaction_data['Execution Price'] * transaction_data['Units Traded']).sum()
     transaction_cost_percentage = (total_slippage / total_trade_amount) * 100
 
-    print(f"Total Transaction Cost Percentage: {transaction_cost_percentage:.2f}%")
     return transaction_cost_percentage
+
+def reduction_in_yield(management_fee_percentage: float, transaction_cost_percentage: float, investment_period: int) -> float:
+    total_riy = (management_fee_percentage + transaction_cost_percentage) * investment_period
+    return total_riy
+
+def cost_over_time(initial_investment, management_fee_percentage, transaction_cost_percentage):
+    annual_cost_percentage = management_fee_percentage + transaction_cost_percentage
+
+    # Calculate total costs over 1, 3, and 5 years
+    costs_one_year = initial_investment * (annual_cost_percentage / 100)
+    costs_three_years = initial_investment * ((1 + (annual_cost_percentage / 100)) ** 3 - 1)
+    costs_five_years = initial_investment * ((1 + (annual_cost_percentage / 100)) ** 5 - 1)
+  
+    return costs_one_year, costs_three_years, costs_five_years
