@@ -33,21 +33,21 @@ async def calculate():
     
     summary_risk_indicator_result = summary_risk_indicator(historical_prices)
     performance_scenarios_result = performance_scenarios(historical_prices, investment_amount, investment_period)
-    performance_scenarios_one_year = performance_scenarios(historical_prices, investment_amount, 1)
+    performance_scenarios_one_year_result = performance_scenarios(historical_prices, investment_amount, 1)
     transaction_costs_result = transaction_costs(transaction_data, investment_amount)
-    reduction_in_yield_result = reduction_in_yield(management_fee_percentage, transaction_costs_result["transaction cost percentage"], investment_period)
-    cost_over_time_result = cost_over_time(investment_amount, management_fee_percentage, transaction_costs_result["transaction cost percentage"])
+    reduction_in_yield_result = reduction_in_yield(management_fee_percentage, transaction_costs_result["transactionCostPercentage"], investment_period)
+    cost_over_time_result = cost_over_time(investment_amount, management_fee_percentage, transaction_costs_result["transactionCostPercentage"])
     ongoing_charges_result = ongoing_charges(management_fee_percentage, other_ongoing_costs)
     one_off_costs_result = one_off_costs(entry_cost_percentage, exit_cost_percentage, investment_amount)
     incidental_costs_result = incidental_costs(performance_fee_percentage, benchmark_return, actual_return, investment_amount)
     
-    return {"Summary Risk Indicator": summary_risk_indicator_result, 
-            "Performance Scenarios One Year": performance_scenarios_one_year, 
-            "Performance Scenarios Suggested Period": performance_scenarios_result, 
-            "Transaction Costs": transaction_costs_result,
-            "Reduction In Yield":reduction_in_yield_result,
-            "Cost Over Time": cost_over_time_result,
-            "Ongoing Charges": ongoing_charges_result,
-            "One Off Costs": one_off_costs_result,
-            "Incidental Costs": incidental_costs_result}
+    return {"summaryRiskIndicator": summary_risk_indicator_result, 
+            "performanceScenariosOneYear": performance_scenarios_one_year_result, 
+            "performanceScenariosSuggestedPeriod": performance_scenarios_result, 
+            "transactionCosts": transaction_costs_result,
+            "reductionInYield":reduction_in_yield_result,
+            "costOverTime": cost_over_time_result,
+            "ongoingCharges": ongoing_charges_result,
+            "oneOffCosts": one_off_costs_result,
+            "incidentalCosts": incidental_costs_result}
 

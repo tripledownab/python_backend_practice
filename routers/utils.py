@@ -60,7 +60,7 @@ def transaction_costs(transaction_data, investment_amount: int):
     transaction_cost_percentage = (total_slippage / total_trade_amount) * 100
     transaction_cost_currency = (transaction_cost_percentage / 100) * investment_amount
 
-    return {"transaction cost percentage":round(transaction_cost_percentage, 4), "transaction cost currency":round(transaction_cost_currency, 2)}
+    return {"transactionCostPercentage":round(transaction_cost_percentage, 4), "transactionCostInCurrency":round(transaction_cost_currency, 2)}
 
 def reduction_in_yield(management_fee_percentage: float, transaction_cost_percentage: float, investment_period: int) -> float:
     total_riy = (management_fee_percentage + transaction_cost_percentage) * investment_period
