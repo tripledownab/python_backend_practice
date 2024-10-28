@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from starlette import status
-from .utils import summary_risk_indicator, performance_scenarios, transaction_costs, reduction_in_yield, cost_over_time
+from .utils import summary_risk_indicator, performance_scenarios, transaction_costs, reduction_in_yield, cost_over_time, ongoing_charges, one_off_costs, incidental_costs
 import pandas as pd
 import os
 
@@ -21,20 +21,33 @@ async def calculate():
     transaction_data = pd.read_csv(transaction_data_file_path)
     
     # settings
-    investment_amount=10000
+    investment_amount=100000
     investment_period=3
     management_fee_percentage = 1.0  
-    transaction_cost_percentage = 0.5
+    other_ongoing_costs = 0.3
+    entry_cost_percentage = 0.5
+    exit_cost_percentage = 0.5
+    performance_fee_percentage = 20.0  
+    benchmark_return = 0.05  
+    actual_return = 0.10 
     
     summary_risk_indicator_result = summary_risk_indicator(historical_prices)
     performance_scenarios_result = performance_scenarios(historical_prices, investment_amount, investment_period)
-    transaction_costs_result = transaction_costs(transaction_data)
-    reduction_in_yield_result = reduction_in_yield(management_fee_percentage, transaction_cost_percentage, investment_period)
-    cost_over_time_result = cost_over_time(investment_amount, management_fee_percentage, transaction_cost_percentage)
+    performance_scenarios_one_year = performance_scenarios(historical_prices, investment_amount, 1)
+    transaction_costs_result = transaction_costs(transaction_data, investment_amount)
+    reduction_in_yield_result = reduction_in_yield(management_fee_percentage, transaction_costs_result["transaction cost percentage"], investment_period)
+    cost_over_time_result = cost_over_time(investment_amount, management_fee_percentage, transaction_costs_result["transaction cost percentage"])
+    ongoing_charges_result = ongoing_charges(management_fee_percentage, other_ongoing_costs)
+    one_off_costs_result = one_off_costs(entry_cost_percentage, exit_cost_percentage, investment_amount)
+    incidental_costs_result = incidental_costs(performance_fee_percentage, benchmark_return, actual_return, investment_amount)
     
     return {"Summary Risk Indicator": summary_risk_indicator_result, 
-            "Performance Scenarios": performance_scenarios_result, 
+            "Performance Scenarios One Year": performance_scenarios_one_year, 
+            "Performance Scenarios Suggested Period": performance_scenarios_result, 
             "Transaction Costs": transaction_costs_result,
             "Reduction In Yield":reduction_in_yield_result,
-            "Cost Over Time": cost_over_time_result}
+            "Cost Over Time": cost_over_time_result,
+            "Ongoing Charges": ongoing_charges_result,
+            "One Off Costs": one_off_costs_result,
+            "Incidental Costs": incidental_costs_result}
 
