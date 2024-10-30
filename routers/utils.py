@@ -90,4 +90,4 @@ def incidental_costs(performance_fee_percentage: float, benchmark_return: float,
         performance_fee = initial_investment * ((actual_return - benchmark_return) * (performance_fee_percentage / 100))
     else:
         performance_fee = 0.0
-    return performance_fee
+    return round(performance_fee, 2)

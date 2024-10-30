@@ -1,5 +1,7 @@
 from fastapi import APIRouter
 from starlette import status
+
+from models import InvestmentRequestData
 from .utils import summary_risk_indicator, performance_scenarios, transaction_costs, reduction_in_yield, cost_over_time, ongoing_charges, one_off_costs, incidental_costs
 import pandas as pd
 import os
@@ -11,7 +13,7 @@ async def check():
     return {"Hello": "World"}
 
 @router.post("/calculate", status_code=status.HTTP_201_CREATED)
-async def calculate():
+async def calculate(data: InvestmentRequestData):
     base_path = os.path.dirname(os.path.abspath(__file__))
     # Load historical price data
     historical_prices_file_path = os.path.join(base_path, 'sample_data', 'historical_price_data.csv')
@@ -21,15 +23,15 @@ async def calculate():
     transaction_data = pd.read_csv(transaction_data_file_path)
     
     # settings
-    investment_amount=100000
-    investment_period=3
-    management_fee_percentage = 1.0  
-    other_ongoing_costs = 0.3
-    entry_cost_percentage = 0.5
-    exit_cost_percentage = 0.5
-    performance_fee_percentage = 20.0  
-    benchmark_return = 0.05  
-    actual_return = 0.10 
+    investment_amount = data.investment_amount
+    investment_period = data.investment_period
+    management_fee_percentage = data.management_fee_percentage
+    other_ongoing_costs = data.other_ongoing_costs
+    entry_cost_percentage = data.entry_cost_percentage
+    exit_cost_percentage = data.exit_cost_percentage
+    performance_fee_percentage = data.performance_fee_percentage
+    benchmark_return = data.benchmark_return
+    actual_return = data.actual_return
     
     summary_risk_indicator_result = summary_risk_indicator(historical_prices)
     performance_scenarios_result = performance_scenarios(historical_prices, investment_amount, investment_period)
