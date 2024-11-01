@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from pydantic_settings import BaseSettings, SettingsConfigDict
     
 class InvestmentRequestData(BaseModel):
     investment_amount: float
@@ -27,3 +28,9 @@ class InvestmentRequestData(BaseModel):
             }
         }
         }
+
+class User (BaseModel):
+    id: int
+    username: str
+    password: str # should be hashed
+    

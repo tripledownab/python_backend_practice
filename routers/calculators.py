@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+from dotenv import load_dotenv
+from fastapi import APIRouter, Depends, HTTPException, Security
+from fastapi.security import APIKeyHeader
 from starlette import status
 
 from models import InvestmentRequestData
@@ -7,13 +9,25 @@ import pandas as pd
 import os
 
 router = APIRouter()
+load_dotenv()
+
+API_KEY = os.environ.get("API_KEY")
+API_KEY_NAME = os.environ.get("API_KEY_NAME")
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+async def get_api_key(api_key: str = Security(api_key_header)):
+    if api_key == API_KEY:
+        return api_key
+    else:
+        raise HTTPException(status_code=403, detail="Invalid API Key")
 
 @router.get("/", status_code=status.HTTP_200_OK)
 async def check():
     return {"Hello": "World"}
 
 @router.post("/calculate", status_code=status.HTTP_201_CREATED)
-async def calculate(data: InvestmentRequestData):
+async def calculate(data: InvestmentRequestData, api_key: str = Depends(get_api_key)):
+    ## Following code will be replaced with actual implementation
     base_path = os.path.dirname(os.path.abspath(__file__))
     # Load historical price data
     historical_prices_file_path = os.path.join(base_path, 'sample_data', 'historical_price_data.csv')
