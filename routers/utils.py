@@ -64,26 +64,25 @@ def transaction_costs(transaction_data, investment_amount: int):
 
 def reduction_in_yield(management_fee_percentage: float, transaction_cost_percentage: float, investment_period: int) -> float:
     total_riy = (management_fee_percentage + transaction_cost_percentage) * investment_period
-    return total_riy
+    return round(total_riy, 2)
 
-def cost_over_time(initial_investment, management_fee_percentage, transaction_cost_percentage):
+def cost_over_time(initial_investment, management_fee_percentage, transaction_cost_percentage, investment_period):
     annual_cost_percentage = management_fee_percentage + transaction_cost_percentage
 
     # Calculate total costs over 1, 3, and 5 years
     costs_one_year = initial_investment * (annual_cost_percentage / 100)
-    costs_three_years = initial_investment * ((1 + (annual_cost_percentage / 100)) ** 3 - 1)
-    costs_five_years = initial_investment * ((1 + (annual_cost_percentage / 100)) ** 5 - 1)
+    costs_suggested_period = initial_investment * ((1 + (annual_cost_percentage / 100)) ** investment_period - 1)
   
-    return {"costsOneYear": round(costs_one_year, 2), "costsThreeYears": round(costs_three_years, 2), "costsFiveYears": round(costs_five_years, 2)}
+    return {"costsOneYear": round(costs_one_year, 2), "costsSuggestedPeriod": round(costs_suggested_period, 2)}
 
 def ongoing_charges(annual_management_fee: float, other_ongoing_costs: float) -> float:
     total_ongoing_charges = annual_management_fee + other_ongoing_costs
     return total_ongoing_charges
 
 def one_off_costs(entry_cost_percentage, exit_cost_percentage, initial_investment):
-    entry_cost = initial_investment * (entry_cost_percentage / 100)
-    exit_cost = initial_investment * (exit_cost_percentage / 100)
-    return {"entryCost": entry_cost, "exitCost": exit_cost}
+    entry_costs = initial_investment * (entry_cost_percentage / 100)
+    exit_costs = initial_investment * (exit_cost_percentage / 100)
+    return {"entryCosts": entry_costs, "exitCosts": exit_costs}
 
 def incidental_costs(performance_fee_percentage: float, benchmark_return: float, actual_return: float, initial_investment: int) -> float:
     if actual_return > benchmark_return:
