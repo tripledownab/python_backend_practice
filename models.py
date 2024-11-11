@@ -1,7 +1,4 @@
 from pydantic import BaseModel
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
-from pydantic_settings import BaseSettings, SettingsConfigDict
-    
 class InvestmentRequestData(BaseModel):
     investment_amount: float
     investment_period: int
