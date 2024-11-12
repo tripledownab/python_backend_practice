@@ -5,7 +5,8 @@ from routers import calculators
 app = FastAPI()
 
 origins = [
-  "https://financeanalytica.io/",
+  "https://financeanalytica.io/", # Production
+  "https://fa-dev-phi.vercel.app/", # Staging
   "http://localhost:3000"
 ]
 
