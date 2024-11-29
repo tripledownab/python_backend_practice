@@ -66,15 +66,25 @@ async def calculate(data: InvestmentRequestData, api_key: str = Depends(get_api_
     one_off_costs_result = one_off_costs(entry_cost_percentage, exit_cost_percentage, investment_amount)
     incidental_costs_result = incidental_costs(performance_fee_percentage, benchmark_return, actual_return, investment_amount)
     
-    return {"summaryRiskIndicator": summary_risk_indicator_result, 
-            "performanceScenariosOneYear": performance_scenarios_one_year_result, 
-            "performanceScenariosSuggestedPeriod": performance_scenarios_result, 
-            "transactionCosts": transaction_costs_result,
-            "reductionInYield":reduction_in_yield_result,
-            "costOverTime": cost_over_time_result,
-            "ongoingCharges": ongoing_charges_result,
-            "oneOffCosts": one_off_costs_result,
-            "incidentalCosts": incidental_costs_result}
+    return {'ept_01090_SRI': summary_risk_indicator_result,
+        'ept_07020_RIY_1_year': reduction_in_yield_result['riy_1_year'], 
+        'ept_07060_RIY_RHP': reduction_in_yield_result['riy_rhp'],
+        'ept_03080_Ongoing_costs_Portfolio_transaction_costs_percentage': transaction_costs_result["transactionCostPercentage"],
+        'ept_03080_Ongoing_costs_Portfolio_transaction_costs': transaction_costs_result["transactionCostInCurrency"],
+        'ept_07010_Total_cost_1_year': cost_over_time_result["costsOneYear"],
+        'ept_07050_Total_cost_RHP': cost_over_time_result["costsSuggestedPeriod"],
+        'ept_03010_One_off_cost_Portfolio_entry_cost': one_off_costs_result["entryCosts"],
+        'ept_03030_One_off_costs_Portfolio_exit_cost_at_1_year': one_off_costs_result["exitCosts"],
+        'ept_03070_Ongoing_costs_Portfolio_management_costs': management_fee_percentage,
+        'ept_03095_Incidental_costs_Portfolio_performance_fees': incidental_costs_result,
+        'ept_02100_Portfolio_return_stress_scenario_1_year': performance_scenarios_result["stressScenario"],
+        'ept_02010_Portfolio_return_unfavorable_scenario_1_year': performance_scenarios_result["unfavorableScenario"],
+        'ept_02040_Portfolio_return_moderate_scenario_1_year': performance_scenarios_result["moderateScenario"],
+        'ept_02070_Portfolio_return_favorable_scenario_1_year': performance_scenarios_result["favorableScenario"],
+        'ept_02120_Portfolio_return_stress_scenario_RHP': performance_scenarios_result["stressScenario"],
+        'ept_02030_Portfolio_return_unfavorable_scenario_RHP': performance_scenarios_result["unfavorableScenario"],
+        'ept_02060_Portfolio_return_moderate_scenario_RHP': performance_scenarios_result["moderateScenario"],
+        'ept_02090_Portfolio_return_favorable_scenario_RHP': performance_scenarios_result["favorableScenario"]}
 
 @router.get("/test", status_code=status.HTTP_200_OK)
 async def test():

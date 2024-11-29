@@ -48,31 +48,26 @@ def performance_scenarios(historical_prices: pd.DataFrame, investment_amount: in
     unfavorable_scenario = project_value(investment_amount, unfavorable_case, investment_period)
     moderate_scenario = project_value(investment_amount, moderate_case, investment_period)
     favorable_scenario = project_value(investment_amount, favorable_case, investment_period)
-
     return {"stressScenario": round(stress_scenario, 2), "unfavorableScenario": round(unfavorable_scenario, 2), 
             "moderateScenario": round(moderate_scenario, 2), "favorableScenario": round(favorable_scenario, 2)}
     
 def transaction_costs(transaction_data, investment_amount: int):
     transaction_data['Slippage'] = (transaction_data['Execution Price'] - transaction_data['Arrival Price']) * transaction_data['Units Traded']
-
     total_slippage = transaction_data['Slippage'].sum()
     total_trade_amount = (transaction_data['Execution Price'] * transaction_data['Units Traded']).sum()
     transaction_cost_percentage = (total_slippage / total_trade_amount) * 100
     transaction_cost_currency = (transaction_cost_percentage / 100) * investment_amount
-
     return {"transactionCostPercentage":round(transaction_cost_percentage, 4), "transactionCostInCurrency":round(transaction_cost_currency, 2)}
 
 def reduction_in_yield(management_fee_percentage: float, transaction_cost_percentage: float, investment_period: int) -> float:
-    total_riy = (management_fee_percentage + transaction_cost_percentage) * investment_period
-    return round(total_riy, 2)
+    riy_1_year = (management_fee_percentage + transaction_cost_percentage) * 1 
+    riy_rhp = (management_fee_percentage + transaction_cost_percentage) * investment_period
+    return {"riy_1_year": round(riy_1_year, 2), "riy_rhp": round(riy_rhp, 2)}
 
 def cost_over_time(initial_investment, management_fee_percentage, transaction_cost_percentage, investment_period):
     annual_cost_percentage = management_fee_percentage + transaction_cost_percentage
-
-    # Calculate total costs over 1, 3, and 5 years
     costs_one_year = initial_investment * (annual_cost_percentage / 100)
     costs_suggested_period = initial_investment * ((1 + (annual_cost_percentage / 100)) ** investment_period - 1)
-  
     return {"costsOneYear": round(costs_one_year, 2), "costsSuggestedPeriod": round(costs_suggested_period, 2)}
 
 def ongoing_charges(annual_management_fee: float, other_ongoing_costs: float) -> float:
