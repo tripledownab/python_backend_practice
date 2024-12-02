@@ -77,14 +77,22 @@ async def calculate(data: InvestmentRequestData, api_key: str = Depends(get_api_
         'ept_03030_One_off_costs_Portfolio_exit_cost_at_1_year': one_off_costs_result["exitCosts"],
         'ept_03070_Ongoing_costs_Portfolio_management_costs': management_fee_percentage,
         'ept_03095_Incidental_costs_Portfolio_performance_fees': incidental_costs_result,
-        'ept_02100_Portfolio_return_stress_scenario_1_year': performance_scenarios_result["stressScenario"],
-        'ept_02010_Portfolio_return_unfavorable_scenario_1_year': performance_scenarios_result["unfavorableScenario"],
-        'ept_02040_Portfolio_return_moderate_scenario_1_year': performance_scenarios_result["moderateScenario"],
-        'ept_02070_Portfolio_return_favorable_scenario_1_year': performance_scenarios_result["favorableScenario"],
+        'ept_02100_Portfolio_return_stress_scenario_1_year': performance_scenarios_one_year_result["stressScenario"],
+        'ept_02010_Portfolio_return_unfavorable_scenario_1_year': performance_scenarios_one_year_result["unfavorableScenario"],
+        'ept_02040_Portfolio_return_moderate_scenario_1_year': performance_scenarios_one_year_result["moderateScenario"],
+        'ept_02070_Portfolio_return_favorable_scenario_1_year': performance_scenarios_one_year_result["favorableScenario"],
+        'ept_02100_Portfolio_return_stress_scenario_1_year_percentage': performance_scenarios_one_year_result["stress_scenario_percentage"],
+        'ept_02010_Portfolio_return_unfavorable_scenario_1_year_percentage': performance_scenarios_one_year_result["unfavorableScenarioPercentage"],
+        'ept_02040_Portfolio_return_moderate_scenario_1_year_percentage': performance_scenarios_one_year_result["moderateScenarioPercentage"],
+        'ept_02070_Portfolio_return_favorable_scenario_1_year_percentage': performance_scenarios_one_year_result["favorableScenarioPercentage"],
         'ept_02120_Portfolio_return_stress_scenario_RHP': performance_scenarios_result["stressScenario"],
         'ept_02030_Portfolio_return_unfavorable_scenario_RHP': performance_scenarios_result["unfavorableScenario"],
         'ept_02060_Portfolio_return_moderate_scenario_RHP': performance_scenarios_result["moderateScenario"],
-        'ept_02090_Portfolio_return_favorable_scenario_RHP': performance_scenarios_result["favorableScenario"]}
+        'ept_02090_Portfolio_return_favorable_scenario_RHP': performance_scenarios_result["favorableScenario"],
+        'ept_02120_Portfolio_return_stress_scenario_RHP_percentage': performance_scenarios_result["stress_scenario_percentage"],
+        'ept_02030_Portfolio_return_unfavorable_scenario_RHP_percentage': performance_scenarios_result["unfavorableScenarioPercentage"],
+        'ept_02060_Portfolio_return_moderate_scenario_RHP_percentage': performance_scenarios_result["moderateScenarioPercentage"],
+        'ept_02090_Portfolio_return_favorable_scenario_RHP_percentage': performance_scenarios_result["favorableScenarioPercentage"]}
 
 @router.get("/test", status_code=status.HTTP_200_OK)
 async def test():

@@ -48,8 +48,14 @@ def performance_scenarios(historical_prices: pd.DataFrame, investment_amount: in
     unfavorable_scenario = project_value(investment_amount, unfavorable_case, investment_period)
     moderate_scenario = project_value(investment_amount, moderate_case, investment_period)
     favorable_scenario = project_value(investment_amount, favorable_case, investment_period)
+    stress_scenario_percentage = (stress_scenario - investment_amount) / investment_amount * 100
+    unfavorable_scenario_percentage = (unfavorable_scenario - investment_amount) / investment_amount * 100
+    moderate_scenario_percentage = (moderate_scenario - investment_amount) / investment_amount * 100
+    favorable_scenario_percentage = (favorable_scenario - investment_amount) / investment_amount * 100
     return {"stressScenario": round(stress_scenario, 2), "unfavorableScenario": round(unfavorable_scenario, 2), 
-            "moderateScenario": round(moderate_scenario, 2), "favorableScenario": round(favorable_scenario, 2)}
+            "moderateScenario": round(moderate_scenario, 2), "favorableScenario": round(favorable_scenario, 2),
+            "stress_scenario_percentage": round(stress_scenario_percentage, 2), "unfavorableScenarioPercentage": round(unfavorable_scenario_percentage, 2),
+            "moderateScenarioPercentage": round(moderate_scenario_percentage, 2), "favorableScenarioPercentage": round(favorable_scenario_percentage, 2)}
     
 def transaction_costs(transaction_data, investment_amount: int):
     transaction_data['Slippage'] = (transaction_data['Execution Price'] - transaction_data['Arrival Price']) * transaction_data['Units Traded']
