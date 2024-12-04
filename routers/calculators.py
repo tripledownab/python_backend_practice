@@ -62,7 +62,7 @@ async def calculate(data: InvestmentRequestData, api_key: str = Depends(get_api_
     transaction_costs_result = transaction_costs(transaction_data, investment_amount)
     reduction_in_yield_result = reduction_in_yield(management_fee_percentage, transaction_costs_result["transactionCostPercentage"], investment_period)
     cost_over_time_result = cost_over_time(investment_amount, management_fee_percentage, transaction_costs_result["transactionCostPercentage"], investment_period)
-    ongoing_charges_result = ongoing_charges(management_fee_percentage, other_ongoing_costs_percentage)
+    ongoing_charges_result = ongoing_charges(management_fee_percentage, other_ongoing_costs_percentage, investment_amount)
     one_off_costs_result = one_off_costs(entry_cost_percentage, exit_cost_percentage, investment_amount)
     incidental_costs_result = incidental_costs(performance_fee_percentage, benchmark_return, actual_return, investment_amount)
     
@@ -75,7 +75,7 @@ async def calculate(data: InvestmentRequestData, api_key: str = Depends(get_api_
         'ept_07050_Total_cost_RHP': cost_over_time_result["costsSuggestedPeriod"],
         'ept_03010_One_off_cost_Portfolio_entry_cost': one_off_costs_result["entryCosts"],
         'ept_03030_One_off_costs_Portfolio_exit_cost_at_1_year': one_off_costs_result["exitCosts"],
-        'ept_03070_Ongoing_costs_Portfolio_management_costs': management_fee_percentage,
+        'ept_03070_Ongoing_costs_Portfolio_management_costs': ongoing_charges_result,
         'ept_03095_Incidental_costs_Portfolio_performance_fees': incidental_costs_result,
         'ept_02100_Portfolio_return_stress_scenario_1_year': performance_scenarios_one_year_result["stressScenario"],
         'ept_02010_Portfolio_return_unfavorable_scenario_1_year': performance_scenarios_one_year_result["unfavorableScenario"],

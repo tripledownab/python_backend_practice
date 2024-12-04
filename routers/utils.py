@@ -76,9 +76,9 @@ def cost_over_time(initial_investment, management_fee_percentage, transaction_co
     costs_suggested_period = initial_investment * ((1 + (annual_cost_percentage / 100)) ** investment_period - 1)
     return {"costsOneYear": round(costs_one_year, 2), "costsSuggestedPeriod": round(costs_suggested_period, 2)}
 
-def ongoing_charges(annual_management_fee: float, other_ongoing_costs: float) -> float:
+def ongoing_charges(annual_management_fee: float, other_ongoing_costs: float, investment_amount: int) -> float:
     total_ongoing_charges = annual_management_fee + other_ongoing_costs
-    return total_ongoing_charges
+    return total_ongoing_charges * investment_amount / 100
 
 def one_off_costs(entry_cost_percentage, exit_cost_percentage, initial_investment):
     entry_costs = initial_investment * (entry_cost_percentage / 100)
